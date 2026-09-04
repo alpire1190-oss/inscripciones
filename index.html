@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/juego3.css">
+    <title>Documento</title>
+</head>
+<body>
+        <form id="formInscripcion" action="https://formspree.io" method="POST" class="formulario">
+
+    <h2>Ficha de Inscripción</h2>
+
+    <div class="grupo">
+        <label for="tutor">Nombre del Tutor</label>
+        <input type="text" id="tutor" name="tutor" placeholder="Nombre y Apellido">
+    </div>
+        <div class="grupo">
+        <label for="alumno">Nombre del Alumno</label>
+        <input type="text" id="alumno" name="alumno" placeholder="Nombre y Apellido">
+    </div>
+
+    <div class="grupo">
+        <label for="telefono">Telefono del Tutor</label>
+        <input type="tel" id="telefono" name="telefono" placeholder="+54..." required>
+    </div>
+    
+    <div class="grupo">
+        <label for="turno">Confirmar Turno</label>
+        <select name="turno" id="turno" required>
+            <option value="" disabled selected hidden>Selecionar un Turno</option>
+            <option value="turno tarde">Turno Tarde</option>
+            <option value="turno vespestino">Turno Vespertino</option>
+        </select>
+    </div>
+    <div class="grupo">
+        <label for="curso">Confirmar Curso</label>
+        <select id="curso" name="curso" required>
+            <option value="" disabled selected hidden>Seleciona Curso</option>
+        </select>
+    </div>
+
+    <button type="submit">Confirmar Inscripcion</button>
+    </form>
+ <script>
+        const selectorCursos = document.getElementById('curso');
+
+        const listaCursos = [
+            "1°5", "1°6", "1°7", 
+            "2°2", "2°6", 
+            "3°1", "3°2", 
+            "4°1", "4°2", 
+            "5°1", "5°2"
+        ];
+
+        listaCursos.forEach(curso => {
+            const opcion = document.createElement('option');
+            opcion.value = curso;
+            opcion.text = curso;
+            selectorCursos.appendChild(opcion);
+        });
+
+        document.getElementById('formInscripcion').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const tutor = document.getElementById('tutor').value;
+            const alumno = document.getElementById('alumno').value;
+            const telefono = document.getElementById('telefono').value;
+            const turno = document.getElementById('turno').value;
+            const curso = selectorCursos.value;
+
+             const mensaje = `*Nueva Ficha de Inscripción*
+        *Tutor:* ${tutor}
+        *Alumno:* ${alumno}
+        *Teléfono:* ${telefono}
+        *Turno:* ${turno}
+        *Curso:* ${curso}`;
+
+      
+  
+            const url = `https://wa.me/5493878623883?text=${encodeURIComponent(mensaje)}`;
+                window.open(url, '_blank');
+        });
+    </script>
+</body>
+</html>

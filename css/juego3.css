@@ -1,0 +1,82 @@
+body{
+    font-family: Arial, Sans-serif;
+    background-color: #eef2f3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.formulario{
+    background-color: white;
+    padding: 30px;
+    border-radius: 50px;
+    box-shadow: 0 6px 15px rgb(0, 0, 0, 0.1);
+
+    width: 350px;
+    display: flex;
+    flex-direction: column;
+}
+
+h2{
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #333;
+    text-align: center;
+    display: block;
+    width: 100%;
+}
+
+.grupo{
+    margin-bottom: 15px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+label{
+    margin-bottom: 6px;
+    color: #555;
+    font-size: 14px;
+    font-weight: bold;
+}
+input, select{
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+input:focus, select:focus{
+    border-color: #3498bd;
+    outline: none;
+}
+
+button{
+    background: #111;
+    color: #0ff;
+    border: 3px solid #0ff;
+    padding: 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    text-shadow: 0 0 5px #0ff;
+    box-shadow: 0.3s;
+}
+
+button:hover{
+    background-color: #27ae60;
+}
+
+@media (max-width: 400px) {
+    .formulario {
+        width: 100%; /* En celular se estira por completo */
+        padding: 20px; /* Achica un poco el espacio interno para que entre mejor */
+    }
+    
+    input, select, button {
+        padding: 12px; /* Agranda un poquito los cuadros para tocarlos fácil con el dedo */
+    }
+}

@@ -7,7 +7,10 @@
     <title>Documento</title>
 </head>
 <body>
-        <form id="formInscripcion" action="https://formspree.io" method="POST" class="formulario">
+    <!-- 1. CAMBIO EN EL FORMULARIO: -->
+    <!-- ANTES: <form id="formInscripcion" action="https://formspree.io" method="POST" class="formulario"> -->
+    <!-- AHORA: Se elimina la acción externa de Formspree para procesarlo en tu propio servidor -->
+    <form id="formInscripcion" class="formulario">
 
     <h2>Ficha de Inscripción</h2>
 
@@ -15,7 +18,7 @@
         <label for="tutor">Nombre del Tutor</label>
         <input type="text" id="tutor" name="tutor" placeholder="Nombre y Apellido">
     </div>
-        <div class="grupo">
+    <div class="grupo">
         <label for="alumno">Nombre del Alumno</label>
         <input type="text" id="alumno" name="alumno" placeholder="Nombre y Apellido">
     </div>
@@ -42,7 +45,8 @@
 
     <button type="submit">Confirmar Inscripcion</button>
     </form>
- <script>
+
+    <script>
         const selectorCursos = document.getElementById('curso');
 
         const listaCursos = [
@@ -60,7 +64,7 @@
             selectorCursos.appendChild(opcion);
         });
 
-        document.getElementById('formInscripcion').addEventListener('submit', function(event) {
+        document.getElementById('formInscripcion').addEventListener('submit', async function(event) {
             event.preventDefault();
 
             const tutor = document.getElementById('tutor').value;
@@ -69,15 +73,27 @@
             const turno = document.getElementById('turno').value;
             const curso = selectorCursos.value;
 
-             const mensaje = `*Nueva Ficha de Inscripción*
-*Tutor:* ${tutor}
-*Alumno:* ${alumno}
-*Teléfono:* ${telefono}
-*Turno:* ${turno}
-*Curso:* ${curso}`;
+            // 2. CAMBIO EN LA LÓGICA DE ENVÍO:
+            // ANTES: Se creaba un texto largo y se abría "https://wa.me..." para enviar manual.
+            // AHORA: Se envían los datos limpios en segundo plano a tu archivo 'server.js' para que Meta lo envíe solo.
+            try {
+                const respuesta = await fetch('/api/enviar-whatsapp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ tutor, alumno, telefono, turno, curso })
+                });
 
-            const url = `https://wa.me/5493878623883?text=${encodeURIComponent(mensaje)}`;
-                window.open(url, '_blank');
+                if (respuesta.ok) {
+                    alert('¡Inscripción confirmada y WhatsApp automático enviado!');
+                } else {
+                    alert('La inscripción se hizo, pero falló el envío de WhatsApp.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Hubo un error de conexión con el servidor.');
+            }
         });
     </script>
 </body>

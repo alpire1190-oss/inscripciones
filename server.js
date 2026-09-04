@@ -13,25 +13,26 @@ app.post('/api/enviar-whatsapp', async (req, res) => {
     // 1. Limpiar el texto: Dejar solo los números sueltos
     let numeroLimpio = telefono.replace(/\D/g, ''); 
 
-    // 2. Si el usuario puso el "0" inicial de la característica (ej: 03878...), se lo quitamos
+    // 2. Si empieza con 0 (ej: 03878...), se lo quitamos
     if (numeroLimpio.startsWith('0')) {
         numeroLimpio = numeroLimpio.substring(1);
     }
 
-    // 3. Si el usuario puso el "15" después de la característica (ej: 387815...), se lo quitamos
-    if (numeroLimpio.length === 12 && numeroLimpio.includes('15', 4)) {
+    // 3. Si tiene el 15 (ej: 387815...), se lo removemos
+    if (numeroLimpio.includes('15')) {
         numeroLimpio = numeroLimpio.replace('15', '');
-    } else if (numeroLimpio.length === 10 && !numeroLimpio.startsWith('9')) {
-        // Si es un número local común de 10 dígitos (ej: 3878623883), le agregamos el '9' obligatorio de Meta
-        numeroLimpio = '9' + numeroLimpio;
     }
 
-    // 4. Asegurarnos de agregar el prefijo internacional de Argentina (54) al inicio si no lo tiene
-    if (!numeroLimpio.startsWith('54')) {
+    // 4. Si el usuario ingresó el formato local de 10 dígitos (ej: 3878623883)
+    // Armamos el formato internacional directo con el 54 pero SIN el 9 intermedio
+    if (numeroLimpio.length === 10 && !numeroLimpio.startsWith('54')) {
+        numeroLimpio = '54' + numeroLimpio;
+    } else if (!numeroLimpio.startsWith('54')) {
+        // En cualquier otro caso, aseguramos el prefijo de Argentina
         numeroLimpio = '54' + numeroLimpio;
     }
 
-    console.log("Número corregido para Meta:", numeroLimpio);
+    console.log("Número final enviado a Meta:", numeroLimpio);
 
     try {
         const response = await fetch(`https://facebook.com{process.env.PHONE_NUMBER_ID}/messages`, {
@@ -42,7 +43,7 @@ app.post('/api/enviar-whatsapp', async (req, res) => {
             },
             body: JSON.stringify({
                 messaging_product: "whatsapp",
-                to: numeroLimpio, // Aquí ya va el número 100% perfecto para WhatsApp
+                to: numeroLimpio, 
                 type: "template",
                 template: {
                     name: "hello_world", 

@@ -70,14 +70,12 @@
             const curso = selectorCursos.value;
 
              const mensaje = `*Nueva Ficha de Inscripción*
-        *Tutor:* ${tutor}
-        *Alumno:* ${alumno}
-        *Teléfono:* ${telefono}
-        *Turno:* ${turno}
-        *Curso:* ${curso}`;
+*Tutor:* ${tutor}
+*Alumno:* ${alumno}
+*Teléfono:* ${telefono}
+*Turno:* ${turno}
+*Curso:* ${curso}`;
 
-      
-  
             const url = `https://wa.me/5493878623883?text=${encodeURIComponent(mensaje)}`;
                 window.open(url, '_blank');
         });

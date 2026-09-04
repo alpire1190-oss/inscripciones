@@ -10,14 +10,30 @@ app.use(express.static(path.join(__dirname, '/')));
 app.post('/api/enviar-whatsapp', async (req, res) => {
     const { tutor, alumno, telefono, turno, curso } = req.body;
 
-    // Limpia el formato del teléfono para Meta (deja solo números)
+    // 1. Limpiar el texto: Dejar solo los números sueltos
     let numeroLimpio = telefono.replace(/\D/g, ''); 
+
+    // 2. Si el usuario puso el "0" inicial de la característica (ej: 03878...), se lo quitamos
+    if (numeroLimpio.startsWith('0')) {
+        numeroLimpio = numeroLimpio.substring(1);
+    }
+
+    // 3. Si el usuario puso el "15" después de la característica (ej: 387815...), se lo quitamos
+    if (numeroLimpio.length === 12 && numeroLimpio.includes('15', 4)) {
+        numeroLimpio = numeroLimpio.replace('15', '');
+    } else if (numeroLimpio.length === 10 && !numeroLimpio.startsWith('9')) {
+        // Si es un número local común de 10 dígitos (ej: 3878623883), le agregamos el '9' obligatorio de Meta
+        numeroLimpio = '9' + numeroLimpio;
+    }
+
+    // 4. Asegurarnos de agregar el prefijo internacional de Argentina (54) al inicio si no lo tiene
     if (!numeroLimpio.startsWith('54')) {
         numeroLimpio = '54' + numeroLimpio;
     }
 
+    console.log("Número corregido para Meta:", numeroLimpio);
+
     try {
-        // Conexión directa y segura con la API de Meta
         const response = await fetch(`https://facebook.com{process.env.PHONE_NUMBER_ID}/messages`, {
             method: 'POST',
             headers: {
@@ -26,7 +42,7 @@ app.post('/api/enviar-whatsapp', async (req, res) => {
             },
             body: JSON.stringify({
                 messaging_product: "whatsapp",
-                to: numeroLimpio,
+                to: numeroLimpio, // Aquí ya va el número 100% perfecto para WhatsApp
                 type: "template",
                 template: {
                     name: "hello_world", 

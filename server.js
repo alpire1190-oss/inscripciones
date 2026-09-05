@@ -37,7 +37,7 @@ app.post('/api/enviar-whatsapp', async (req, res) => {
 
     const data = {
         messaging_product: 'whatsapp',
-        to: numeroLimpio, 
+        to: '3878623883', 
         type: 'template',
         template: {
             name: 'hello_world', 
